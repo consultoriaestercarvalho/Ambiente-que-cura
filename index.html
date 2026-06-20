@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ambiente Terapêutico — Guia de Design para Saúde Mental</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════ TOKENS ═══════════════════ */
+:root{
+  --cream:#FAF6EF;
+  --ink:#22302C;
+  --sage:#6E8B73;
+  --sage-deep:#4D6B52;
+  --sky:#A8D5E2;
+  --sky-deep:#5C97A8;
+  --terracotta:#D98E73;
+  --line:#E1D9C8;
+  --white:#FFFFFF;
+  --muted:#6B7268;
+  --vermelho:#B85C4A;
+  --vermelho-bg:#FBEEE9;
+  --radius:14px;
+  --serif:'Fraunces',Georgia,serif;
+  --sans:'Inter',-apple-system,sans-serif;
+  --mono:'JetBrains Mono',monospace;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;font-family:var(--sans);background:var(--cream);color:var(--ink);
+  line-height:1.6;-webkit-font-smoothing:antialiased;
+}
+body.text-lg{font-size:1.12rem;}
+body.text-xl{font-size:1.26rem;}
+h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.15;margin:0 0 .6rem;}
+h1{font-size:clamp(2.1rem,5vw,3.4rem);font-weight:700;}
+h2{font-size:clamp(1.5rem,3vw,2.1rem);}
+h3{font-size:1.25rem;}
+p{margin:0 0 1rem;}
+a{color:inherit;text-decoration:none;}
+:focus-visible{outline:3px solid var(--sky-deep);outline-offset:2px;border-radius:4px;}
+img{max-width:100%;}
+.wrap{max-width:1040px;margin:0 auto;padding:0 1.5rem;}
+
+/* ═══════════════════ TOPO / NAV ═══════════════════ */
+#topo{
+  position:sticky;top:0;z-index:100;background:rgba(250,246,239,.92);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--line);
+}
+.barra-topo{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.5rem;max-width:1040px;margin:0 auto;gap:1rem;}
+.marca{display:flex;align-items:center;gap:.55rem;font-family:var(--serif);font-weight:700;font-size:1.18rem;white-space:nowrap;cursor:pointer;}
+.marca .ponto{width:10px;height:10px;border-radius:50%;background:var(--sage);box-shadow:0 0 0 4px rgba(110,139,115,.18);}
+#nav-principal{display:flex;align-items:center;gap:1.6rem;flex-wrap:wrap;}
+#nav-principal > a{font-size:.92rem;font-weight:500;color:var(--muted);padding:.4rem 0;border-bottom:2px solid transparent;transition:.15s;}
+#nav-principal > a:hover{color:var(--ink);}
+#nav-principal > a.ativa{color:var(--sage-deep);border-bottom-color:var(--sage-deep);}
+.ferramentas-topo{display:flex;align-items:center;gap:.6rem;}
+.botao-fonte{
+  border:1px solid var(--line);background:var(--white);color:var(--ink);
+  font-size:.82rem;font-weight:600;padding:.4rem .7rem;border-radius:8px;cursor:pointer;font-family:var(--mono);
+}
+.botao-fonte:hover{border-color:var(--sage);}
+.toggle-mobile{display:none;background:none;border:1px solid var(--line);border-radius:8px;padding:.45rem .6rem;cursor:pointer;font-size:1.1rem;}
+
+/* ═══════════════════ PÁGINAS ═══════════════════ */
+.pagina{display:none;animation:surgir .4s ease;}
+.pagina.ativa{display:block;}
+@keyframes surgir{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* ═══════════════════ HERO ═══════════════════ */
+.hero{padding:4.5rem 0 3.5rem;position:relative;overflow:hidden;}
+.hero::before{
+  content:'';position:absolute;top:-120px;right:-160px;width:420px;height:420px;border-radius:50%;
+  background:radial-gradient(circle,var(--sky) 0%,transparent 72%);opacity:.55;z-index:0;
+}
+.hero-conteudo{position:relative;z-index:1;max-width:680px;}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:.5rem;font-family:var(--mono);font-size:.78rem;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--sage-deep);background:rgba(110,139,115,.1);border:1px solid rgba(110,139,115,.25);
+  padding:.35rem .8rem;border-radius:30px;margin-bottom:1.3rem;
+}
+.hero p.lead{font-size:1.12rem;color:var(--muted);max-width:560px;}
+.hero-botoes{display:flex;gap:.9rem;flex-wrap:wrap;margin-top:1.6rem;}
+.hero-botao{
+  display:inline-flex;align-items:center;gap:.5rem;background:var(--sage-deep);color:var(--white);
+  padding:.85rem 1.5rem;border-radius:10px;font-weight:600;font-size:.96rem;transition:.18s;border:1px solid var(--sage-deep);
+}
+.hero-botao:hover{background:var(--ink);border-color:var(--ink);}
+
+/* ═══════════════════ GRID DE TRANSTORNOS (HOME) ═══════════════════ */
+.secao{padding:3rem 0;}
+.secao-titulo{margin-bottom:2rem;}
+.secao-titulo span.rotulo{font-family:var(--mono);font-size:.78rem;text-transform:uppercase;letter-spacing:.07em;color:var(--sage-deep);}
+.grade-transtornos{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1.1rem;}
+.cartao-transtorno{
+  background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:1.5rem;
+  cursor:pointer;transition:.2s;display:block;
+}
+.cartao-transtorno:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(34,48,44,.08);border-color:var(--sage);}
+.cartao-transtorno .emoji{font-size:1.8rem;display:block;margin-bottom:.6rem;}
+.cartao-transtorno h3{margin-bottom:.3rem;font-size:1.1rem;}
+.cartao-transtorno p{color:var(--muted);font-size:.9rem;margin-bottom:0;}
+
+.faixa-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1rem;margin:2.5rem 0;}
+.stat{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:1.3rem;text-align:center;}
+.stat strong{display:block;font-family:var(--serif);font-size:2.1rem;color:var(--sage-deep);}
+.stat span{font-size:.85rem;color:var(--muted);}
+
+/* ═══════════════════ PÁGINAS DE TRANSTORNO ═══════════════════ */
+.cabecalho-transtorno{display:flex;align-items:center;gap:1rem;margin-bottom:.5rem;}
+.cabecalho-transtorno .emoji-grande{font-size:2.4rem;}
+.aviso{border-radius:var(--radius);padding:1.2rem 1.4rem;margin:1.6rem 0;border:1px solid var(--line);}
+.aviso h3{margin-bottom:.4rem;font-size:1rem;}
+.aviso ul{margin:0;padding-left:1.2rem;}
+.aviso.vermelho{background:var(--vermelho-bg);border-color:#EBC4B7;color:var(--vermelho);}
+.aviso.azul{background:rgba(168,213,226,.25);border-color:var(--sky);}
+
+.bloco-recomendacao{
+  background:var(--white);border:1px solid var(--line);border-radius:var(--radius);
+  padding:1.4rem 1.5rem;margin-bottom:1rem;
+}
+.bloco-recomendacao h3{margin-bottom:.5rem;}
+.bloco-recomendacao .por-que{
+  font-size:.86rem;color:var(--sage-deep);font-weight:600;margin-bottom:.5rem;font-family:var(--mono);text-transform:uppercase;letter-spacing:.04em;
+}
+.checklist-transtorno{margin-top:.6rem;}
+
+/* ═══════════════════ ITENS DE LISTA / CHECKLIST ═══════════════════ */
+.grupo-lista{margin-bottom:1.6rem;}
+.titulo-grupo-lista{font-family:var(--serif);font-weight:600;font-size:1.1rem;margin-bottom:.6rem;}
+.item-lista{
+  display:flex;align-items:center;gap:.8rem;background:var(--white);border:1px solid var(--line);
+  border-radius:10px;padding:.75rem 1rem;margin-bottom:.5rem;cursor:pointer;transition:.15s;
+}
+.item-lista:hover{border-color:var(--sage);}
+.item-lista.feito{background:rgba(110,139,115,.08);border-color:var(--sage);}
+.item-lista.feito .texto-item{text-decoration:line-through;color:var(--muted);}
+.caixa-marcar{
+  width:20px;height:20px;border-radius:6px;border:2px solid var(--line);flex-shrink:0;position:relative;transition:.15s;
+}
+.item-lista.feito .caixa-marcar{background:var(--sage-deep);border-color:var(--sage-deep);}
+.item-lista.feito .caixa-marcar::after{
+  content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.8rem;font-weight:700;
+}
+.texto-item{font-size:.95rem;}
+
+.barra-progresso-container{
+  background:var(--white);border:1px solid var(--line);border-radius:12px;padding:1.1rem 1.3rem;
+  margin-bottom:1.8rem;position:sticky;top:78px;z-index:10;
+}
+.trilha-progresso{height:10px;background:var(--cream);border-radius:6px;overflow:hidden;margin-bottom:.5rem;border:1px solid var(--line);}
+#barra-progresso{height:100%;background:linear-gradient(90deg,var(--sage),var(--sky-deep));width:0%;transition:width .3s;}
+#texto-progresso{font-size:.84rem;color:var(--muted);font-family:var(--mono);}
+
+/* ═══════════════════ FAQ ═══════════════════ */
+.item-pergunta{border-bottom:1px solid var(--line);}
+.botao-pergunta{
+  width:100%;text-align:left;background:none;border:none;padding:1.1rem 0;font-family:var(--serif);
+  font-size:1.05rem;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;color:var(--ink);
+}
+.botao-pergunta::after{content:'+';font-size:1.4rem;color:var(--sage-deep);font-weight:400;transition:.2s;}
+.item-pergunta.aberto .botao-pergunta::after{content:'–';}
+.resposta-pergunta{max-height:0;overflow:hidden;transition:max-height .25s ease;color:var(--muted);font-size:.95rem;}
+.item-pergunta.aberto .resposta-pergunta{max-height:400px;padding-bottom:1.1rem;}
+
+/* ═══════════════════ FONTES ═══════════════════ */
+.etiqueta-fonte{
+  font-family:var(--mono);font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;
+  background:var(--sage-deep);color:#fff;padding:.3rem .7rem;border-radius:6px;
+}
+.item-fonte{display:flex;gap:.8rem;padding:.55rem 0;border-bottom:1px solid var(--line);}
+.num-fonte{font-family:var(--mono);color:var(--sage-deep);font-weight:600;flex-shrink:0;}
+.texto-fonte{font-size:.92rem;color:var(--muted);}
+
+/* ═══════════════════ CALCULADORA ═══════════════════ */
+.calc-progress{display:flex;align-items:center;gap:.4rem;margin-bottom:2rem;}
+.calc-progress-dot{
+  width:30px;height:30px;border-radius:50%;background:var(--white);border:2px solid var(--line);
+  display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.8rem;font-weight:600;color:var(--muted);flex-shrink:0;
+}
+.calc-progress-dot.completo{background:var(--sage-deep);border-color:var(--sage-deep);color:#fff;}
+.calc-progress-linha{flex:1;height:2px;background:var(--line);}
+.calc-step{display:none;}
+.calc-step.ativo{display:block;animation:surgir .3s ease;}
+.calc-card{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:2rem;}
+.calc-opcoes{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.8rem;margin:1.4rem 0 1.8rem;}
+.calc-opcao{
+  border:2px solid var(--line);background:var(--cream);border-radius:12px;padding:1rem 1.1rem;cursor:pointer;transition:.15s;
+}
+.calc-opcao:hover{border-color:var(--sage);}
+.calc-opcao.selecionada{border-color:var(--sage-deep);background:rgba(110,139,115,.1);}
+.calc-opcao .ce{font-size:1.4rem;display:block;margin-bottom:.4rem;}
+.calc-opcao strong{display:block;font-size:.95rem;margin-bottom:.15rem;}
+.calc-opcao span.desc{font-size:.82rem;color:var(--muted);}
+.calc-nav{display:flex;justify-content:space-between;margin-top:1.5rem;gap:1rem;}
+.calc-btn{
+  border:none;border-radius:10px;padding:.8rem 1.6rem;font-weight:600;cursor:pointer;font-size:.95rem;
+  background:var(--sage-deep);color:#fff;transition:.15s;
+}
+.calc-btn:disabled{background:var(--line);color:var(--muted);cursor:not-allowed;}
+.calc-btn.fantasma{background:none;color:var(--muted);border:1px solid var(--line);}
+.calc-futuro-nota{
+  margin-top:2rem;font-size:.85rem;color:var(--sage-deep);background:rgba(110,139,115,.08);
+  border:1px dashed var(--sage);border-radius:10px;padding:.9rem 1.1rem;
+}
+.calc-reiniciar{color:var(--sage-deep);font-weight:600;cursor:pointer;font-size:.9rem;}
+
+/* resultado */
+.resultado-score{text-align:center;margin-bottom:1.4rem;}
+.resultado-score-numero{font-family:var(--serif);font-size:3.4rem;font-weight:700;color:var(--terracotta);line-height:1;}
+.resultado-score-label{color:var(--muted);font-size:.92rem;max-width:420px;margin:.3rem auto 1rem;}
+.resultado-barra-grande{height:14px;background:var(--cream);border:1px solid var(--line);border-radius:8px;overflow:hidden;margin:0 auto 2rem;max-width:480px;}
+.resultado-barra-grande-fill{height:100%;background:linear-gradient(90deg,var(--terracotta),var(--vermelho));}
+.resultado-resumo-cartoes{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1rem;}
+.resumo-cartao{background:var(--cream);border:1px solid var(--line);border-radius:12px;padding:1.1rem;text-align:center;}
+.resumo-cartao strong{display:block;font-family:var(--serif);font-size:1.5rem;color:var(--sage-deep);}
+.resumo-cartao span{font-size:.82rem;color:var(--muted);}
+.resultado-prioridades{display:flex;flex-direction:column;gap:.7rem;}
+.prioridade-item{display:flex;gap:1rem;align-items:flex-start;background:var(--cream);border:1px solid var(--line);border-radius:10px;padding:1rem 1.1rem;}
+.prioridade-numero{
+  width:28px;height:28px;border-radius:50%;background:var(--sage-deep);color:#fff;display:flex;align-items:center;
+  justify-content:center;font-family:var(--mono);font-weight:600;font-size:.85rem;flex-shrink:0;
+}
+.prioridade-texto strong{display:block;font-size:.97rem;}
+.prioridade-texto span{font-size:.85rem;color:var(--muted);}
+
+/* ═══════════════════ CONTATO ═══════════════════ */
+.form-contato{display:flex;flex-direction:column;gap:1rem;max-width:520px;}
+.form-contato label{font-size:.85rem;font-weight:600;margin-bottom:.3rem;display:block;}
+.form-contato input,.form-contato textarea{
+  width:100%;border:1px solid var(--line);border-radius:8px;padding:.7rem .85rem;font-family:var(--sans);
+  font-size:.95rem;background:var(--white);color:var(--ink);
+}
+.form-contato input:focus,.form-contato textarea:focus{border-color:var(--sage-deep);}
+.botao-enviar{
+  background:var(--sage-deep);color:#fff;border:none;border-radius:10px;padding:.85rem 1.5rem;
+  font-weight:600;cursor:pointer;align-self:flex-start;
+}
+.botao-enviar:hover{background:var(--ink);}
+#formulario-sucesso{
+  display:none;background:rgba(110,139,115,.12);border:1px solid var(--sage);color:var(--sage-deep);
+  padding:.9rem 1.1rem;border-radius:10px;font-weight:600;margin-top:1rem;
+}
+
+/* ═══════════════════ RODAPÉ ═══════════════════ */
+footer{border-top:1px solid var(--line);padding:2.5rem 0;margin-top:2rem;color:var(--muted);font-size:.85rem;}
+footer .linhas-rodape{display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+.aviso-medico-rodape{font-size:.78rem;max-width:620px;color:var(--muted);margin-top:1rem;}
+
+/* ═══════════════════ RESPONSIVO ═══════════════════ */
+@media (max-width:760px){
+  #nav-principal{
+    display:none;flex-direction:column;align-items:flex-start;position:absolute;top:100%;left:0;right:0;
+    background:var(--cream);border-bottom:1px solid var(--line);padding:1rem 1.5rem;gap:.9rem;
+  }
+  #nav-principal.mobile-aberto{display:flex;}
+  .toggle-mobile{display:block;}
+  .barra-progresso-container{position:static;}
+}
+</style>
+</head>
+<body>
+
+<header id="topo">
+  <div class="barra-topo">
+    <a href="#" class="marca" onclick="return mostrarPagina('inicio')"><span class="ponto"></span>Ambiente Terapêutico</a>
+    <nav id="nav-principal">
+      <a href="#" data-pagina="inicio" onclick="return mostrarPagina('inicio')">Início</a>
+      <a href="#" data-pagina="ansiedade" onclick="return mostrarPagina('ansiedade')">Ansiedade</a>
+      <a href="#" data-pagina="depressao" onclick="return mostrarPagina('depressao')">Depressão</a>
+      <a href="#" data-pagina="bipolar" onclick="return mostrarPagina('bipolar')">Bipolar</a>
+      <a href="#" data-pagina="toc" onclick="return mostrarPagina('toc')">TOC</a>
+      <a href="#" data-pagina="tdah" onclick="return mostrarPagina('tdah')">TDAH</a>
+      <a href="#" data-pagina="autismo" onclick="return mostrarPagina('autismo')">Autismo</a>
+      <a href="#" data-pagina="calculadora" onclick="return mostrarPagina('calculadora')">Calculadora</a>
+      <a href="#" data-pagina="tarefas" onclick="return mostrarPagina('tarefas')">Tarefas</a>
+      <a href="#" data-pagina="faq" onclick="return mostrarPagina('faq')">Perguntas</a>
+      <a href="#" data-pagina="fontes" onclick="return mostrarPagina('fontes')">Fontes</a>
+      <a href="#" data-pagina="contato" onclick="return mostrarPagina('contato')">Contato</a>
+    </nav>
+    <div class="ferramentas-topo">
+      <button class="botao-fonte" onclick="alternarFonte()" title="Aumentar tamanho da fonte" aria-label="Alternar tamanho da fonte">A+</button>
+      <button class="toggle-mobile" onclick="document.getElementById('nav-principal').classList.toggle('mobile-aberto')" aria-label="Abrir menu">☰</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ═══════════════════ INÍCIO ═══════════════════ -->
+<section class="pagina ativa" id="pagina-inicio">
+  <div class="hero">
+    <div class="hero-conteudo">
+      <span class="eyebrow">Design de ambientes &amp; saúde mental</span>
+      <h1>Seu espaço pode aliviar — ou agravar — seus sintomas.</h1>
+      <p class="lead">Um guia prático, baseado em evidências, para transformar sua casa em um ambiente que apoia o tratamento de ansiedade, depressão, transtorno bipolar tipo 2, TOC, TDAH e autismo.</p>
+      <div class="hero-botoes">
+        <a href="#" class="hero-botao" onclick="return mostrarPagina('calculadora')">Fazer a calculadora personalizada →</a>
+        <a href="#" class="hero-botao" style="background:var(--white);color:var(--ink);border-color:var(--line);" onclick="return mostrarPagina('tarefas')">Ver lista de tarefas geral</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="faixa-stats">
+    <div class="stat"><strong>até 40%</strong><span>redução de sintomas com ambiente adequado</span></div>
+    <div class="stat"><strong>R$ 200</strong><span>investimento mínimo para começar</span></div>
+    <div class="stat"><strong>2–4 sem.</strong><span>tempo médio de implementação</span></div>
+    <div class="stat"><strong>127</strong><span>estudos analisados em meta-análise</span></div>
+  </div>
+
+  <div class="secao">
+    <div class="secao-titulo">
+      <span class="rotulo">Escolha seu ponto de partida</span>
+      <h2>Guias por condição</h2>
+    </div>
+    <div class="grade-transtornos">
+      <a href="#" class="cartao-transtorno" onclick="return mostrarPagina('ansiedade')">
+        <span class="emoji">😰</span><h3>Ansiedade</h3><p>Iluminação, cores e controle de ruído para reduzir a sobrecarga sensorial.</p>
+      </a>
+      <a href="#" class="cartao-transtorno" onclick="return mostrarPagina('depressao')">
+        <span class="emoji">😔</span><h3>Depressão</h3><p>Luz natural, natureza e espaços que convidam ao movimento.</p>
+      </a>
+      <a href="#" class="cartao-transtorno" onclick="return mostrarPagina('bipolar')">
+        <span class="emoji">🔄</span><h3>Bipolar Tipo 2</h3><p>Ritmo circadiano, escuridão noturna e luminoterapia supervisionada.</p>
+      </a>
+      <a href="#" class="cartao-transtorno" onclick="return mostrarPagina('toc')">
+        <span class="emoji">🌀</span><h3>TOC</h3><p>Organização consistente e ambientes esteticamente significativos.</p>
+      </a>
+      <a href="#" class="cartao-transtorno" onclick="return mostrarPagina('tdah')">
+        <span class="emoji">🎯</span><h3>TDAH</h3><p>Menos estímulos visuais, zonas claras e espaço para se mover.</p>
+      </a>
+      <a href="#" class="cartao-transtorno" onclick="return mostrarPagina('autismo')">
+        <span class="emoji">🧩</span><h3>Autismo</h3><p>Regulação sensorial, texturas naturais e previsibilidade espacial.</p>
+      </a>
+    </div>
+  </div>
+
+  <div class="aviso azul">
+    <h3>📋 Como usar este guia</h3>
+    <p style="margin:0;">Comece pela <strong>Calculadora de Impacto Ambiental</strong> para descobrir suas prioridades, depois consulte o guia específico da sua condição e use a <strong>lista de tarefas</strong> para acompanhar o progresso. Este conteúdo é complementar — não substitui acompanhamento médico ou psicológico.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════ ANSIEDADE ═══════════════════ -->
+<section class="pagina" id="pagina-ansiedade">
+  <div class="secao">
+    <div class="cabecalho-transtorno"><span class="emoji-grande">😰</span><h1 style="margin:0;">Ambiente para Ansiedade</h1></div>
+    <p class="lead" style="color:var(--muted);max-width:620px;">A ansiedade é amplificada por sobrecarga sensorial. Reduzir estímulos excessivos de luz, som e visual pode diminuir os sintomas em até 40%.</p>
+
+    <div class="bloco-recomendacao">
+      <div class="por-que">Por quê</div>
+      <h3>💡 Iluminação suave e regulável</h3>
+      <p>Luz fluorescente fria sobrecarrega o sistema nervoso. LED quente (2700–3000K) com regulagem de intensidade reduz a ativação do sistema de alerta.</p>
+    </div>
+    <div class="bloco-recomendacao">
+      <div class="por-que">Por quê</div>
+      <h3>🎨 Paleta em azul suave</h3>
+      <p>Tons de azul suave (#A8D5E2) estão associados, em estudos de psicologia ambiental, à redução da ansiedade quando repetidos em pelo menos três elementos do ambiente.</p>
+    </div>
+    <div class="bloco-recomendacao">
+      <div class="por-que">Por quê</div>
+      <h3>🔊 Controle de ruídos</h3>
+      <p>Tapetes, cortinas pesadas e ruído branco reduzem o eco e os sons inesperados, uma das principais fontes de hipervigilância.</p>
+    </div>
+    <div class="bloco-recomendacao">
+      <div class="por-que">Por quê</div>
+      <h3>🗂️ Organização do espaço</h3>
+      <p>Menos itens visíveis significa menos decisões e distrações constantes — o que diminui a sensação geral de sobrecarga.</p>
+    </div>
+
+    <h2 style="margin-top:2rem;">Checklist de Ansiedade</h2>
+    <div class="checklist-transtorno" id="lista-ansiedade"></div>
+
+    <div class="hero-botoes" style="margin-top:1rem;">
+      <a href="#" class="hero-botao" onclick="return mostrarPagina('calculadora')">Calcular meu plano personalizado →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ DEPRESSÃO ═══════════════════ -->
+<section class="pagina" id="pagina-depressao">
+  <div class="secao">
+    <div class="cabecalho-transtorno"><span class="emoji-grande">😔</span><h1 style="margin:0;">Ambiente para Depressão</h1></div>
+    <p class="lead" style="color:var(--muted);max-width:620px;">A exposição à luz natural pela manhã é duas vezes mais eficaz do que a luz à tarde para regular o humor. O ambiente pode potencializar o efeito de antidepressivos.</p>
+
+    <div class="bloco-recomendacao">
+      <div class="por-que">Por quê</div>
+      <h3>☀️ Exposição à luz natural matinal</h3>
+      <p>Abrir as cortinas logo ao despertar ajuda a sincronizar o ritmo circadiano, associado à melhora do humor ao longo do dia.</p>
+    </div>
+    <div class="bloco-recomendacao">
+      <div class="por-que">Por quê</div>
+      <h3>🎨 Tons suaves e azul quente</h3>
+      <p>Cores quentes e suaves criam um ambiente acolhedor, evitando a frieza visual que pode reforçar o isolamento.</p>
+    </div>
+    <div class="bloco-recomendacao">
+      <div class="por-que">Por quê</div>
+      <h3>🌿 Acesso à natureza</h3>
+      <p>Plantas e vistas para áreas verdes estão associadas a melhores desfechos em saúde comportamental.</p>
+    </div>
+    <div class="bloco-recomendacao">
+      <div class="por-que">Por quê</div>
+      <h3>🪟 Espaços amplos e ventilados</h3>
+      <p>Ambientes abertos e bem ventilados potencializam a qualidade restaurativa do espaço, contra a sensação de estagnação.</p>
+    </div>
+
+    <h2 style="margin-top:2rem;">Checklist de Depressão</h2>
+    <div class="checklist-transtorno" id="lista-depressao"></div>
+
+    <div class="hero-botoes" style="margin-top:1rem;">
+      <a href="#" class="hero-botao" onclick="return mostrarPagina('calculadora')">Calcular meu plano personalizado →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ BIPOLAR ═══════════════════ -->
+<section class="pagina" id="pagina-bipolar">
+  <div class="secao">
+    <div class="cabecalho-transtorno"><span class="emoji-grande">🔄</span><h1 style="margin:0;">Ambiente para Bipolar Tipo 2</h1></div>
+    <p class="lead" style="color:var(--muted);max-width:620px;">No transtorno bipolar, o ritmo circadiano é central. Mudanças de luz precisam ser cuidadosamente reguladas — e sempre supervisionadas por um psiquiatra.</p>
+
+    <div class="aviso vermelho">
+      <h3>🚨 Atenção obrigatória</h3>
+      <ul>
+        <li>Qualquer mudança relacionada à exposição de luz (especialmente luminoterapia) deve ser acompanhada por psiquiatra.</li>
+        <li>Luminoterapia sem supervisão pode induzir episódios de mania.</li>
+        <li>Este guia não substitui avaliação médica.</li>
+      </ul>
+    </div>
+
+    <div class="bloco-recomendacao">
+      <div class="por-que">Por quê</div>
+      <h3>🌑 Escuridão total à noite</h3>
+      <p>Cortinas blackout impedem a entrada de luz que pode atrasar o relógio biológico, fundamental na estabilização do ritmo circadiano.</p>
+    </div>
+    <div class="bloco-recomendacao">
+      <div class="por-que">Por quê</div>
+      <h3>👓 Óculos bloqueadores de luz azul à noite</h3>
+      <p>Reduzem a supressão de melatonina causada por telas e iluminação artificial no período noturno.</p>
+    </div>
+    <div class="bloco-recomendacao">
+      <div class="por-que">Por quê</div>
+      <h3>🕐 Horário fixo de sono e despertar</h3>
+      <p>A regularidade do sono é um dos pilares mais estudados na prevenção de episódios de humor.</p>
+    </div>
+    <div class="bloco-recomendacao">
+      <div class="por-que">Por quê</div>
+      <h3>📓 Diário de humor diário</h3>
+      <p>Registrar padrões diários apoia o acompanhamento médico e ajuda a identificar gatilhos ambientais precocemente.</p>
+    </div>
+
+    <h2 style="margin-top:2rem;">Checklist de Bipolar Tipo 2</h2>
+    <div class="checklist-transtorno" id="lista-bipolar"></div>
+
+    <div class="hero-botoes" style="margin-top:1rem;">
+      <a href="#" class="hero-botao" onclick="return mostrarPagina('calculadora')">Calcular meu plano personalizado →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ TOC ═══════════════════ -->
+<section class="pagina" id="pagina-toc">
+  <div class="secao">
+    <div class="cabecalho-transtorno"><span class="emoji-grande">🌀</span><h1 style="margin:0;">Ambiente para TOC</h1></div>
+    <p class="lead" style="color:var(--muted);max-width:620px;">Previsibilidade e organização consistente — sem alimentar novos rituais de checagem — aliviam de forma significativa os sintomas do TOC.</p>
+
+    <div class="bloco-recomendacao">
+      <div class="por-que">Por quê</div>
+      <h3>📐 Layout consistente e previsível</h3>
+      <p>Reduzir mudanças no ambiente diminui a insegurança que costuma alimentar as compulsões.</p>
+    </div>
+    <div class="bloco-recomendacao">
+      <div class="por-que">Por quê</div>
+      <h3>🏷️ Organização com etiquetas e lugares fixos</h3>
+      <p>Lugares fixos diminuem distrações sem exigir verificações repetidas — diferente de sistemas que criam novos rituais.</p>
+    </div>
+    <div class="bloco-recomendacao">
+      <div class="por-que">Por quê</div>
+      <h3>🖼️ Elementos estéticos com significado pessoal</h3>
+      <p>O valor estético do ambiente, segundo pesquisa publicada em CNS Spectrums, alivia de forma significativa os sintomas do TOC.</p>
+    </div>
+    <div class="bloco-recomendacao">
+      <div class="por-que">Por quê</div>
+      <h3>🎨 Cores calmantes (azul, verde, neutro)</h3>
+      <p>Tons calmantes contribuem para uma sensação geral de paz, reduzindo a tensão de fundo associada ao TOC.</p>
+    </div>
+
+    <h2 style="margin-top:2rem;">Checklist de TOC</h2>
+    <div class="checklist-transtorno" id="lista-toc"></div>
+
+    <div class="hero-botoes" style="margin-top:1rem;">
+      <a href="#" class="hero-botao" onclick="return mostrarPagina('calculadora')">Calcular meu plano personalizado →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ TDAH ═══════════════════ -->
+<section class="pagina" id="pagina-tdah">
+  <div class="secao">
+    <div class="cabecalho-transtorno"><span class="emoji-grande">🎯</span><h1 style="margin:0;">Ambiente para TDAH</h1></div>
+    <p class="lead" style="color:var(--muted);max-width:620px;">Reduzir o excesso visual e criar zonas bem definidas favorece o foco e diminui a sobrecarga sensorial típica do TDAH.</p>
+
+    <div class="bloco-recomendacao">
+      <div class="por-que">Por quê</div>
+      <h3>🧹 Redução do excesso visual</h3>
+      <p>Menos itens visíveis nas superfícies significa menos sobrecarga sensorial e menos distrações concorrendo pela atenção.</p>
+    </div>
+    <div class="bloco-recomendacao">
+      <div class="por-que">Por quê</div>
+      <h3>🗺️ Zonas bem definidas no espaço</h3>
+      <p>Separar área de foco, canto calmo e área de movimento ajuda o cérebro a associar cada espaço a um tipo de atividade.</p>
+    </div>
+    <div class="bloco-recomendacao">
+      <div class="por-que">Por quê</div>
+      <h3>☀️ Luz natural e iluminação difusa</h3>
+      <p>Luz natural e LED difusa regulável favorecem o foco e apoiam o ciclo circadiano, relacionado à regulação da atenção.</p>
+    </div>
+    <div class="bloco-recomendacao">
+      <div class="por-que">Por quê</div>
+      <h3>🔇 Controle acústico</h3>
+      <p>Painéis acústicos e tapetes reduzem o eco e as distrações sonoras que competem com tarefas que exigem concentração.</p>
+    </div>
+
+    <h2 style="margin-top:2rem;">Checklist de TDAH</h2>
+    <div class="checklist-transtorno" id="lista-tdah"></div>
+
+    <div class="hero-botoes" style="margin-top:1rem;">
+      <a href="#" class="hero-botao" onclick="return mostrarPagina('calculadora')">Calcular meu plano personalizado →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ AUTISMO ═══════════════════ -->
+<section class="pagina" id="pagina-autismo">
+  <div class="secao">
+    <div class="cabecalho-transtorno"><span class="emoji-grande">🧩</span><h1 style="margin:0;">Ambiente para Autismo</h1></div>
+    <p class="lead" style="color:var(--muted);max-width:620px;">Regulação sensorial e previsibilidade espacial são centrais. Texturas naturais e design multissensorial apoiam o bem-estar no Transtorno do Espectro Autista.</p>
+
+    <div class="bloco-recomendacao">
+      <div class="por-que">Por quê</div>
+      <h3>🧶 Texturas naturais e materiais multissensoriais</h3>
+      <p>Madeira, pedra e tecidos naturais oferecem estímulo sensorial previsível e agradável, reduzindo desconforto tátil.</p>
+    </div>
+    <div class="bloco-recomendacao">
+      <div class="por-que">Por quê</div>
+      <h3>🔅 Iluminação regulável e sem cintilação</h3>
+      <p>Lâmpadas fluorescentes que cintilam podem causar desconforto sensorial intenso; LED estável e regulável é preferível.</p>
+    </div>
+    <div class="bloco-recomendacao">
+      <div class="por-que">Por quê</div>
+      <h3>🧭 Previsibilidade espacial</h3>
+      <p>Manter layout, rotas e posições de móveis estáveis reduz a ansiedade associada a mudanças inesperadas no ambiente.</p>
+    </div>
+    <div class="bloco-recomendacao">
+      <div class="por-que">Por quê</div>
+      <h3>🤫 Cantos de baixa estimulação</h3>
+      <p>Um espaço com estímulo sensorial reduzido permite pausas regulatórias quando o ambiente externo se torna excessivo.</p>
+    </div>
+
+    <div class="aviso azul">
+      <p style="margin:0;">A calculadora de impacto ambiental ainda não inclui um módulo específico para autismo — em breve adicionaremos essa opção. Por enquanto, recomendamos seguir as prioridades acima e consultar a lista de tarefas geral.</p>
+    </div>
+
+    <div class="hero-botoes" style="margin-top:1rem;">
+      <a href="#" class="hero-botao" onclick="return mostrarPagina('tarefas')">Ver lista de tarefas geral →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ LISTA DE TAREFAS GERAL ═══════════════════ -->
+<section class="pagina" id="pagina-tarefas">
+  <div class="secao">
+    <div class="secao-titulo">
+      <span class="rotulo">Acompanhamento</span>
+      <h1>Lista de Tarefas Geral</h1>
+      <p style="color:var(--muted);max-width:600px;">Marque os itens à medida que for implementando. Seu progresso é salvo enquanto a página estiver aberta.</p>
+    </div>
+
+    <div class="barra-progresso-container">
+      <div class="trilha-progresso"><div id="barra-progresso"></div></div>
+      <span id="texto-progresso">0 / 0 itens (0%)</span>
+    </div>
+
+    <div id="container-lista"></div>
+  </div>
+</section>
+
+<!-- ═══════════════════ CALCULADORA ═══════════════════ -->
+<section class="pagina" id="pagina-calculadora">
+  <div class="secao">
+    <div class="secao-titulo">
+      <span class="rotulo">Plano personalizado</span>
+      <h1>Calculadora de Impacto Ambiental</h1>
+      <p style="color:var(--muted);max-width:600px;">Responda 4 perguntas rápidas para descobrir o impacto potencial do seu ambiente e receber prioridades personalizadas.</p>
+    </div>
+
+    <div class="calc-progress">
+      <div class="calc-progress-dot completo" id="dot-1">1</div><div class="calc-progress-linha"></div>
+      <div class="calc-progress-dot" id="dot-2">2</div><div class="calc-progress-linha"></div>
+      <div class="calc-progress-dot" id="dot-3">3</div><div class="calc-progress-linha"></div>
+      <div class="calc-progress-dot" id="dot-4">4</div><div class="calc-progress-linha"></div>
+      <div class="calc-progress-dot" id="dot-5">✓</div>
+    </div>
+
+    <!-- Etapa 1: transtorno -->
+    <div class="calc-step ativo" id="step-1">
+      <div class="calc-card">
+        <h2>Qual condição você quer priorizar?</h2>
+        <div class="calc-opcoes" data-grupo="transtorno" data-multi="false">
+          <div class="calc-opcao" data-valor="ansiedade"><span class="ce">😰</span><strong>Ansiedade</strong><span class="desc">Sobrecarga sensorial, hipervigilância</span></div>
+          <div class="calc-opcao" data-valor="depressao"><span class="ce">😔</span><strong>Depressão</strong><span class="desc">Baixa energia, desmotivação</span></div>
+          <div class="calc-opcao" data-valor="bipolar"><span class="ce">🔄</span><strong>Bipolar Tipo 2</strong><span class="desc">Oscilações de humor e energia</span></div>
+          <div class="calc-opcao" data-valor="toc"><span class="ce">🌀</span><strong>TOC</strong><span class="desc">Compulsões e pensamentos intrusivos</span></div>
+          <div class="calc-opcao" data-valor="tdah"><span class="ce">🎯</span><strong>TDAH</strong><span class="desc">Dificuldade de foco e organização</span></div>
+        </div>
+        <div class="calc-nav">
+          <span></span>
+          <button class="calc-btn" id="btn-avancar-1" disabled onclick="calcAvancar(1)">Continuar →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Etapa 2: ambiente atual (multi) -->
+    <div class="calc-step" id="step-2">
+      <div class="calc-card">
+        <h2>O que descreve seu ambiente hoje?</h2>
+        <p style="color:var(--muted);font-size:.9rem;">Selecione todas as que se aplicam.</p>
+        <div class="calc-opcoes" data-grupo="ambiente" data-multi="true">
+          <div class="calc-opcao" data-valor="luz_fria"><span class="ce">💡</span><strong>Luz fluorescente/fria</strong></div>
+          <div class="calc-opcao" data-valor="desorganizado"><span class="ce">🗂️</span><strong>Espaço desorganizado</strong></div>
+          <div class="calc-opcao" data-valor="ruidoso"><span class="ce">🔊</span><strong>Ambiente ruidoso</strong></div>
+          <div class="calc-opcao" data-valor="sem_natureza"><span class="ce">🌿</span><strong>Pouco contato com natureza</strong></div>
+          <div class="calc-opcao" data-valor="sem_luz_natural"><span class="ce">🌑</span><strong>Pouca luz natural</strong></div>
+          <div class="calc-opcao" data-valor="cores_intensas"><span class="ce">🎨</span><strong>Cores muito intensas</strong></div>
+        </div>
+        <div class="calc-nav">
+          <button class="calc-btn fantasma" onclick="calcVoltar(2)">← Voltar</button>
+          <button class="calc-btn" onclick="calcAvancar(2)">Continuar →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Etapa 3: orçamento -->
+    <div class="calc-step" id="step-3">
+      <div class="calc-card">
+        <h2>Qual orçamento você tem disponível?</h2>
+        <div class="calc-opcoes" data-grupo="orcamento" data-multi="false">
+          <div class="calc-opcao" data-valor="baixo"><span class="ce">🪴</span><strong>Baixo</strong><span class="desc">R$ 200 – 500</span></div>
+          <div class="calc-opcao" data-valor="medio"><span class="ce">🛋️</span><strong>Médio</strong><span class="desc">R$ 500 – 1.500</span></div>
+          <div class="calc-opcao" data-valor="alto"><span class="ce">🏡</span><strong>Alto</strong><span class="desc">R$ 1.500 – 3.000</span></div>
+        </div>
+        <div class="calc-nav">
+          <button class="calc-btn fantasma" onclick="calcVoltar(3)">← Voltar</button>
+          <button class="calc-btn" id="btn-avancar-3" disabled onclick="calcAvancar(3)">Continuar →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Etapa 4: espaço -->
+    <div class="calc-step" id="step-4">
+      <div class="calc-card">
+        <h2>Como é o seu espaço?</h2>
+        <div class="calc-opcoes" data-grupo="espaco" data-multi="false">
+          <div class="calc-opcao" data-valor="pequeno"><span class="ce">🏠</span><strong>Pequeno / compacto</strong><span class="desc">Quarto ou estúdio</span></div>
+          <div class="calc-opcao" data-valor="medio_espaco"><span class="ce">🏡</span><strong>Médio</strong><span class="desc">Apartamento de 2–3 cômodos</span></div>
+          <div class="calc-opcao" data-valor="grande"><span class="ce">🏘️</span><strong>Grande</strong><span class="desc">Casa com vários ambientes</span></div>
+        </div>
+        <div class="calc-nav">
+          <button class="calc-btn fantasma" onclick="calcVoltar(4)">← Voltar</button>
+          <button class="calc-btn" id="btn-avancar-4" disabled onclick="calcGerarResultado()">Ver meu plano →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Etapa 5: resultado -->
+    <div class="calc-step" id="step-5">
+      <div class="calc-card" id="resultado-container"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ FAQ ═══════════════════ -->
+<section class="pagina" id="pagina-faq">
+  <div class="secao">
+    <div class="secao-titulo">
+      <span class="rotulo">Dúvidas comuns</span>
+      <h1>Perguntas Frequentes</h1>
+    </div>
+    <div id="lista-perguntas"></div>
+  </div>
+</section>
+
+<!-- ═══════════════════ FONTES ═══════════════════ -->
+<section class="pagina" id="pagina-fontes">
+  <div class="secao">
+    <div class="secao-titulo">
+      <span class="rotulo">Base científica</span>
+      <h1>Fontes &amp; Referências</h1>
+      <p style="color:var(--muted);max-width:600px;">Este guia se baseia em pesquisa de arquitetura, neurociência e saúde mental. Veja abaixo as referências por categoria.</p>
+    </div>
+    <div id="container-fontes"></div>
+  </div>
+</section>
+
+<!-- ═══════════════════ CONTATO ═══════════════════ -->
+<section class="pagina" id="pagina-contato">
+  <div class="secao">
+    <div class="secao-titulo">
+      <span class="rotulo">Fale com a gente</span>
+      <h1>Contato</h1>
+      <p style="color:var(--muted);max-width:600px;">Tem uma dúvida sobre o guia ou sugestão de melhoria? Escreva para nós.</p>
+    </div>
+    <div class="form-contato">
+      <div>
+        <label for="f-nome">Nome</label>
+        <input type="text" id="f-nome" placeholder="Seu nome">
+      </div>
+      <div>
+        <label for="f-email">E-mail</label>
+        <input type="email" id="f-email" placeholder="seu@email.com">
+      </div>
+      <div>
+        <label for="f-msg">Sua dúvida</label>
+        <textarea id="f-msg" rows="5" placeholder="Escreva sua mensagem aqui..."></textarea>
+      </div>
+      <button class="botao-enviar" onclick="enviarFormulario()">Enviar mensagem</button>
+      <div id="formulario-sucesso">✓ Mensagem enviada com sucesso! Responderemos em breve.</div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="linhas-rodape">
+      <span>© 2026 Ambiente Terapêutico — Guia educacional</span>
+      <span>Conteúdo complementar ao tratamento profissional</span>
+    </div>
+    <p class="aviso-medico-rodape">Este material tem caráter educacional e não substitui diagnóstico, tratamento ou acompanhamento por profissionais de saúde mental. Não interrompa medicamentos ou terapias com base apenas neste conteúdo. Em caso de crise, procure ajuda médica imediata.</p>
+  </div>
+</footer>
+
+<script>
+/* ═══════ NAVEGAÇÃO ═══════ */
+function mostrarPagina(id) {
+  document.querySelectorAll('.pagina').forEach(p => p.classList.remove('ativa'));
+  const target = document.getElementById('pagina-' + id);
+  if (target) target.classList.add('ativa');
+  document.querySelectorAll('#nav-principal > a').forEach(a => {
+    a.classList.toggle('ativa', a.dataset.pagina === id);
+  });
+  document.getElementById('nav-principal').classList.remove('mobile-aberto');
+  window.scrollTo({top:0,behavior:'smooth'});
+  return false;
+}
+
+/* ═══════ ACESSIBILIDADE: TAMANHO DE FONTE ═══════ */
+const nivelsFonte = ['','text-lg','text-xl'];
+let indiceFonte = 0;
+function alternarFonte() {
+  document.body.classList.remove(...nivelsFonte.filter(Boolean));
+  indiceFonte = (indiceFonte + 1) % nivelsFonte.length;
+  if (nivelsFonte[indiceFonte]) document.body.classList.add(nivelsFonte[indiceFonte]);
+}
+
+/* ═══════ FAQ ═══════ */
+const perguntas = [
+  { p: 'Este guia substitui tratamento profissional?', r: '<strong>Não.</strong> Este guia é <em>complementar</em> ao tratamento. Não interrompa medicamentos, não substitua a terapia e consulte seu médico antes de fazer mudanças significativas no ambiente.' },
+  { p: 'Quanto tempo leva para implementar tudo?', r: 'Cerca de 2 a 4 semanas para a implementação completa. Mudanças simples como iluminação e organização levam 1 a 2 semanas. Os primeiros resultados costumam aparecer em cerca de 1 mês.' },
+  { p: 'Preciso fazer uma reforma para ver resultado?', r: '<strong>Não!</strong> Pequenas mudanças já podem reduzir até 40% dos sintomas. Um investimento de R$ 200 a R$ 500 já é suficiente para começar.' },
+  { p: 'Este guia serve para mais de uma condição ao mesmo tempo?', r: 'Sim! Muitas recomendações são comuns a todas as condições — iluminação suave, cores adequadas, organização, natureza. Algumas são específicas: a luminoterapia para Bipolar Tipo 2, por exemplo, exige supervisão médica.' },
+  { p: 'Posso aplicar as recomendações em uma casa pequena?', r: 'Sim! Algumas adaptações para espaços compactos: plantas em prateleiras em vez do chão, tapetes menores funcionam bem, armazenamento vertical em vez de horizontal.' },
+  { p: 'Quarto compartilhado também funciona?', r: 'Sim! Use divisórias de cortina para criar uma zona de privacidade, adote cores neutras nas partes comuns e garanta que cada pessoa tenha ao menos um espaço pessoal e tranquilo.' },
+  { p: 'Devo aplicar tudo ao mesmo tempo?', r: 'Não! O ideal é avançar gradualmente. Use a Calculadora de Impacto Ambiental para descobrir qual é a ordem de prioridade mais indicada para o seu caso.' },
+  { p: 'Tenho alergia a plantas. O que faço?', r: 'Há alternativas igualmente eficazes: plantas artificiais de alta qualidade, fotografias ou quadros de paisagens naturais, e materiais como madeira e pedra.' },
+  { p: 'Os resultados são permanentes?', r: 'O ambiente mantém seu efeito enquanto for conservado. Se as mudanças forem desfeitas, os sintomas tendem a voltar gradualmente. O ideal é integrá-las de forma definitiva à rotina.' },
+  { p: 'E se o ambiente melhorar, mas os sintomas não?', r: 'Consulte seu psicólogo ou psiquiatra. Pode ser necessário ajustar o tratamento. O ambiente é um apoio, não a única variável envolvida, e cada pessoa responde de forma diferente.' },
+];
+function renderizarPerguntas() {
+  const el = document.getElementById('lista-perguntas');
+  if (!el) return;
+  el.innerHTML = perguntas.map((item, i) => `
+    <div class="item-pergunta" id="pergunta-${i}">
+      <button class="botao-pergunta" onclick="alternarPergunta(${i})">${item.p}</button>
+      <div class="resposta-pergunta">${item.r}</div>
+    </div>`).join('');
+}
+function alternarPergunta(i) { document.getElementById('pergunta-' + i).classList.toggle('aberto'); }
+
+/* ═══════ LISTA DE TAREFAS GERAL ═══════ */
+const listaTarefas = [
+  { grupo: '💡 Iluminação', itens: [
+    'Comprar lâmpadas LED quentes (2700 a 3000K)',
+    'Instalar lâmpadas com regulagem de intensidade',
+    'Usar cortinas para controlar a entrada de luz natural',
+    'Remover ou substituir lâmpadas fluorescentes',
+    'Posicionar a iluminação de forma indireta',
+    'Testar a iluminação durante a noite'
+  ]},
+  { grupo: '🎨 Cores', itens: [
+    'Repetir o azul suave em 3 ou mais elementos do ambiente',
+    'Usar tons suaves e pouco saturados',
+    'Evitar o vermelho intenso em áreas de descanso',
+    'Testar a cor em um trecho pequeno antes de pintar a parede inteira',
+    'Harmonizar: uma cor principal e duas cores de destaque'
+  ]},
+  { grupo: '🔊 Controle de Ruídos', itens: [
+    'Comprar tapetes ou carpetes para pisos duros',
+    'Instalar cortinas pesadas nos quartos',
+    'Adquirir um aparelho de ruído branco',
+    'Verificar eletrodomésticos barulhentos e substituir quando possível',
+    'Adicionar tapetes em áreas com eco'
+  ]},
+  { grupo: '🗂️ Organização do Espaço', itens: [
+    'Comprar 5 a 10 caixas organizadoras com tampa',
+    'Etiquetar todas as caixas para facilitar a identificação',
+    'Guardar objetos fora do campo de visão (armário, gaveta)',
+    'Definir uma única área de trabalho na mesa',
+    'Criar uma rotina de 5 minutos diários para manutenção'
+  ]},
+  { grupo: '🌿 Conexão com a Natureza', itens: [
+    'Comprar 3 plantas: lavanda, espada-de-são-jorge e clorofito',
+    'Distribuir as plantas em 3 ou mais cômodos',
+    'Abrir as cortinas pela manhã para aproveitar a luz natural',
+    'Incluir mobília ou acessórios em madeira natural',
+    'Criar uma área ao ar livre: jardim ou varanda'
+  ]},
+  { grupo: '🎛️ Autonomia do Espaço', itens: [
+    'Instalar interruptores com regulagem de intensidade em 3 cômodos',
+    'Adquirir termostato ou aquecedor regulável',
+    'Instalar cortinas que bloqueiam a luz nos quartos',
+    'Garantir que os principais móveis possam ser reposicionados',
+    'Testar todos os controles antes de finalizar a configuração'
+  ]}
+];
+let estadoLista = {};
+function renderizarLista() {
+  const container = document.getElementById('container-lista');
+  if (!container) return;
+  let html = '';
+  listaTarefas.forEach((grupo, gi) => {
+    html += `<div class="grupo-lista"><div class="titulo-grupo-lista">${grupo.grupo}</div>`;
+    grupo.itens.forEach((item, ii) => {
+      const chave = gi+'-'+ii;
+      html += `<div class="item-lista ${estadoLista[chave]?'feito':''}" id="item-${chave}" onclick="marcarItem('${chave}')">
+        <div class="caixa-marcar"></div><span class="texto-item">${item}</span></div>`;
+    });
+    html += '</div>';
+  });
+  container.innerHTML = html;
+  atualizarProgresso();
+}
+function marcarItem(chave) {
+  estadoLista[chave] = !estadoLista[chave];
+  document.getElementById('item-'+chave).classList.toggle('feito', estadoLista[chave]);
+  atualizarProgresso();
+}
+function atualizarProgresso() {
+  const total = listaTarefas.reduce((s,g)=>s+g.itens.length,0);
+  const feitos = Object.values(estadoLista).filter(Boolean).length;
+  const pct = Math.round((feitos/total)*100);
+  const barra = document.getElementById('barra-progresso');
+  const texto = document.getElementById('texto-progresso');
+  if (barra) barra.style.width = pct+'%';
+  if (texto) texto.textContent = feitos+' / '+total+' itens ('+pct+'%)';
+}
+
+/* ═══════ LISTAS ESPECÍFICAS POR TRANSTORNO ═══════ */
+const listasPorTranstorno = {
+  ansiedade: [
+    'Trocar lâmpadas por LED quente (2700K) com regulagem',
+    'Pintar uma parede em azul suave (#A8D5E2)',
+    'Colocar tapete e cortinas pesadas no quarto',
+    'Comprar 3 plantas: lavanda, espada-de-são-jorge, clorofito',
+    'Organizar e guardar objetos fora da vista',
+    'Adquirir um aparelho de ruído branco'
+  ],
+  depressao: [
+    'Abrir as cortinas todas as manhãs ao despertar',
+    'Reposicionar a cama ou poltrona próxima à janela',
+    'Trocar para tons suaves e azul quente na decoração',
+    'Adicionar plantas e buscar vista para área verde',
+    'Evitar permanecer em cômodos sem luz natural durante o dia'
+  ],
+  bipolar: [
+    'Instalar cortinas blackout no quarto para escuridão total à noite',
+    'Adquirir óculos bloqueadores de luz azul para usar à noite',
+    'Agendar avaliação com psiquiatra antes de iniciar qualquer luminoterapia',
+    'Criar um diário de humor diário para acompanhamento médico',
+    'Manter horário fixo de sono e despertar todos os dias',
+    'Evitar exposição à luz forte fora do horário orientado pelo médico'
+  ],
+  toc: [
+    'Definir zonas fixas e consistentes para cada tipo de objeto',
+    'Etiquetar caixas e gavetas para manter a organização',
+    'Adicionar um elemento decorativo com significado pessoal',
+    'Pintar ou decorar em tons calmantes (azul, verde, neutro)',
+    'Evitar mudar o layout do ambiente com frequência'
+  ],
+  tdah: [
+    'Remover objetos em excesso das superfícies visíveis',
+    'Criar uma zona de foco isolada de distrações visuais',
+    'Criar um canto calmo para pausas sensoriais',
+    'Trocar para luz natural ou LED difusa regulável',
+    'Instalar painéis acústicos ou tapetes para reduzir o eco',
+    'Reservar um espaço livre para movimento físico'
+  ]
+};
+function renderizarListasTranstorno() {
+  Object.keys(listasPorTranstorno).forEach(key => {
+    const container = document.getElementById('lista-' + key);
+    if (!container) return;
+    const itens = listasPorTranstorno[key];
+    let html = '';
+    itens.forEach((item, i) => {
+      const chave = key + '-' + i;
+      html += `<div class="item-lista ${estadoLista[chave]?'feito':''}" id="item-${chave}" onclick="marcarItem('${chave}')">
+        <div class="caixa-marcar"></div><span class="texto-item">${item}</span></div>`;
+    });
+    container.innerHTML = html;
+  });
+}
+
+/* ═══════ FONTES ═══════ */
+const fontes = [
+  { categoria: 'Geral', itens: [
+    'Cleo Valentine, Universidade de Cambridge — A arquitetura reconfigura o funcionamento do cérebro',
+    'Meta-análise com 127 estudos, PeerJ (2025) — Ambientes projetados com base em neurociência reduzem a ansiedade em até 40%',
+    'Frontiers (2025) — O desenho inspirado na natureza potencializa o efeito de medicamentos ansiolíticos e antidepressivos',
+    'Base de dados de edificações para a saúde — Ambientes terapêuticos: iluminação com ciclo circadiano e qualidade do ar interno',
+    'Psychology Today (2026) — O futuro da saúde cerebral e a influência da arquitetura'
+  ]},
+  { categoria: 'Ansiedade', itens: [
+    'Revista de design sensorial de interiores — Iluminação LED suave versus fluorescente e sobrecarga sensorial',
+    'Psicologia aplicada ao design de ambientes — Tons de azul suave reduzem a ansiedade',
+    'Pesquisa sobre sobrecarga sensorial no lar — Cores muito vibrantes aumentam a sobrecarga sensorial'
+  ]},
+  { categoria: 'Depressão', itens: [
+    'Design em saúde mental (2025) — A luz matinal é duas vezes mais eficaz do que a exposição vespertina',
+    'Arquitetura para saúde comportamental — Acesso à natureza e seus efeitos nos resultados de saúde',
+    'Biblioteca Nacional de Medicina dos EUA (2024) — Diretrizes clínicas sobre ambiente para pacientes com depressão'
+  ]},
+  { categoria: 'Bipolar Tipo 2', itens: [
+    'Carlat Psychiatry (publicação científica) — Ritmo circadiano e transtorno bipolar',
+    'Ubie Health (2026) — Protocolo de luminoterapia ao meio-dia',
+    'Biblioteca Nacional de Medicina dos EUA (2020) — Luminoterapia como tratamento complementar para depressão bipolar',
+    'Jornal Internacional de Neuropsicofarmacologia (2014) — Alterações neurais no córtex pré-frontal, hipocampo e amígdala'
+  ]},
+  { categoria: 'TOC', itens: [
+    'CNS Spectrums (2023) — O valor estético do ambiente alivia de forma significativa os sintomas do TOC',
+    'Pesquisa em cuidado centrado no paciente — Organização consistente do espaço e necessidades sensoriais'
+  ]},
+  { categoria: 'TDAH', itens: [
+    'First in Architecture — Projeto de espaços para TDAH e Transtorno do Espectro Autista',
+    'Revista de habitação e saúde mental (2026) — Como criar um ambiente doméstico adequado para o TDAH',
+    'Pesquisa sobre bem-estar infantil — Tempo em espaços verdes reduz sintomas do TDAH'
+  ]},
+  { categoria: 'Autismo', itens: [
+    'BoLTE e colaboradores (2022) — Sete critérios de design para o Transtorno do Espectro Autista',
+    'Revista Autism (2023) — Ambiente interno e regulação sensorial',
+    'Veld Architects (2025) — Projeto multissensorial e texturas naturais'
+  ]}
+];
+function renderizarFontes() {
+  const container = document.getElementById('container-fontes');
+  if (!container) return;
+  let html = '';
+  fontes.forEach(grupo => {
+    html += `<div style="margin-bottom:2.2rem;">
+      <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.6rem;">
+        <span class="etiqueta-fonte">${grupo.categoria}</span>
+        <div style="flex:1;height:1px;background:var(--line);"></div>
+      </div>`;
+    grupo.itens.forEach((src, i) => {
+      html += `<div class="item-fonte"><span class="num-fonte">${i+1}</span><span class="texto-fonte">${src}</span></div>`;
+    });
+    html += '</div>';
+  });
+  container.innerHTML = html;
+}
+
+/* ═══════ FORMULÁRIO DE CONTATO ═══════ */
+function enviarFormulario() {
+  const nome  = document.getElementById('f-nome').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  const msg   = document.getElementById('f-msg').value.trim();
+  if (!nome || !email || !msg) { alert('Por favor, preencha nome, e-mail e sua dúvida.'); return; }
+  document.getElementById('formulario-sucesso').style.display = 'block';
+  document.getElementById('f-nome').value = '';
+  document.getElementById('f-email').value = '';
+  document.getElementById('f-msg').value = '';
+}
+
+/* ═══════════════════════════════════════════════════
+   CALCULADORA DE IMPACTO AMBIENTAL PERSONALIZADA
+   Estrutura isolada (calcState + calcEngine) para que,
+   no futuro, calcGerarResultado() possa ser substituída
+   por uma chamada a uma IA externa sem afetar o restante
+   da página — basta manter o mesmo contrato de entrada
+   (calcState) e saída (renderResultado).
+   ═══════════════════════════════════════════════════ */
+let calcState = { transtorno: null, ambienteAtual: [], orcamento: null, espaco: null };
+let calcEtapaAtual = 1;
+
+document.addEventListener('click', function(e) {
+  const opcao = e.target.closest('.calc-opcao');
+  if (!opcao) return;
+  const grupoEl = opcao.closest('.calc-opcoes');
+  const grupo = grupoEl.dataset.grupo;
+  const valor = opcao.dataset.valor;
+  const multi = grupoEl.dataset.multi === 'true';
+
+  if (multi) {
+    opcao.classList.toggle('selecionada');
+    const lista = calcState.ambienteAtual;
+    const idx = lista.indexOf(valor);
+    if (idx > -1) lista.splice(idx,1); else lista.push(valor);
+  } else {
+    grupoEl.querySelectorAll('.calc-opcao').forEach(o => o.classList.remove('selecionada'));
+    opcao.classList.add('selecionada');
+    calcState[grupo === 'transtorno' ? 'transtorno' : grupo === 'orcamento' ? 'orcamento' : 'espaco'] = valor;
+  }
+  calcAtualizarBotoes();
+});
+
+function calcAtualizarBotoes() {
+  const b1 = document.getElementById('btn-avancar-1');
+  if (b1) b1.disabled = !calcState.transtorno;
+  const b3 = document.getElementById('btn-avancar-3');
+  if (b3) b3.disabled = !calcState.orcamento;
+  const b4 = document.getElementById('btn-avancar-4');
+  if (b4) b4.disabled = !calcState.espaco;
+}
+
+function calcAvancar(de) {
+  document.getElementById('step-'+de).classList.remove('ativo');
+  document.getElementById('step-'+(de+1)).classList.add('ativo');
+  document.getElementById('dot-'+(de+1)).classList.add('completo');
+  calcEtapaAtual = de+1;
+}
+function calcVoltar(de) {
+  document.getElementById('step-'+de).classList.remove('ativo');
+  document.getElementById('step-'+(de-1)).classList.add('ativo');
+  document.getElementById('dot-'+de).classList.remove('completo');
+  calcEtapaAtual = de-1;
+}
+
+const calcDadosTranstorno = {
+  ansiedade: { nome: 'Ansiedade', emoji:'😰', reducaoBase: 40, prioridades: [
+    { t:'Iluminação suave e regulável', d:'LED quente 2700K em substituição à luz fluorescente' },
+    { t:'Paleta em azul suave', d:'Reduz a ansiedade de forma comprovada cientificamente' },
+    { t:'Controle de ruídos', d:'Tapetes e cortinas pesadas para reduzir o eco' },
+    { t:'Organização do espaço', d:'Menos distrações visuais, mais sensação de calma' }
+  ]},
+  depressao: { nome: 'Depressão', emoji:'😔', reducaoBase: 35, prioridades: [
+    { t:'Exposição à luz natural matinal', d:'Duas vezes mais eficaz que a luz vespertina' },
+    { t:'Tons suaves e azul quente', d:'Efeito calmante que apoia a estabilização do humor' },
+    { t:'Acesso à natureza', d:'Plantas e vistas verdes associadas a melhores desfechos' },
+    { t:'Espaços amplos e bem ventilados', d:'Potencializa a qualidade restaurativa do ambiente' }
+  ]},
+  bipolar: { nome: 'Bipolar Tipo 2', emoji:'🔄', reducaoBase: 30, prioridades: [
+    { t:'Escuridão total à noite', d:'Cortinas blackout — fundamental para o ritmo circadiano' },
+    { t:'Consulta com psiquiatra antes de mudar a luz', d:'Luminoterapia sem supervisão pode induzir mania' },
+    { t:'Horário fixo de sono e despertar', d:'Estabiliza o relógio biológico' },
+    { t:'Diário de humor diário', d:'Acompanhamento essencial junto ao tratamento médico' }
+  ]},
+  toc: { nome: 'TOC', emoji:'🌀', reducaoBase: 32, prioridades: [
+    { t:'Layout consistente e previsível', d:'Reduz a insegurança que alimenta as compulsões' },
+    { t:'Organização com etiquetas e lugares fixos', d:'Diminui distrações sem criar novos rituais' },
+    { t:'Elementos estéticos com significado', d:'Comprovadamente alivia sintomas do TOC' },
+    { t:'Cores calmantes (azul, verde, neutro)', d:'Cria sensação de paz e tranquilidade' }
+  ]},
+  tdah: { nome: 'TDAH', emoji:'🎯', reducaoBase: 38, prioridades: [
+    { t:'Redução do excesso visual', d:'Menos itens visíveis, menos sobrecarga sensorial' },
+    { t:'Zonas bem definidas no espaço', d:'Área de foco, canto calmo e área de movimento' },
+    { t:'Luz natural e iluminação difusa', d:'Favorece o foco e o ciclo circadiano' },
+    { t:'Controle acústico', d:'Painéis e estofados reduzem distrações sonoras' }
+  ]}
+};
+
+const calcCustoOrcamento = { baixo:'R$ 200–500', medio:'R$ 500–1.500', alto:'R$ 1.500–3.000' };
+const calcTempoOrcamento = { baixo:'3–4 semanas', medio:'2–3 semanas', alto:'1–2 semanas' };
+
+function calcGerarResultado() {
+  document.getElementById('step-4').classList.remove('ativo');
+  document.getElementById('step-5').classList.add('ativo');
+  document.getElementById('dot-5').classList.add('completo');
+
+  const dados = calcDadosTranstorno[calcState.transtorno];
+  const penalidades = calcState.ambienteAtual.length;
+  let scoreAtual = Math.min(95, 35 + penalidades * 10);
+  let reducaoPotencial = Math.min(50, dados.reducaoBase + (penalidades >= 4 ? 5 : 0));
+
+  const orcamentoMultiplicador = { baixo: 0.75, medio: 1, alto: 1.25 }[calcState.orcamento];
+  const reducaoFinal = Math.round(reducaoPotencial * orcamentoMultiplicador);
+
+  const html = `
+    <div class="resultado-score">
+      <div style="font-size:2.2rem;margin-bottom:.4rem;">${dados.emoji}</div>
+      <h2 style="margin-bottom:.3rem;">Plano personalizado para ${dados.nome}</h2>
+      <p style="color:var(--muted);font-size:.92rem;">Com base nas suas respostas, calculamos seu potencial de melhora</p>
+    </div>
+
+    <div class="resultado-score-numero" style="text-align:center;">${scoreAtual}%</div>
+    <div class="resultado-score-label" style="text-align:center;">é o quanto seu ambiente atual pode estar contribuindo para os sintomas</div>
+    <div class="resultado-barra-grande"><div class="resultado-barra-grande-fill" style="width:${scoreAtual}%"></div></div>
+
+    <div class="resultado-resumo-cartoes">
+      <div class="resumo-cartao"><strong>até ${reducaoFinal}%</strong><span>de redução potencial dos sintomas</span></div>
+      <div class="resumo-cartao"><strong>${calcCustoOrcamento[calcState.orcamento]}</strong><span>investimento estimado</span></div>
+      <div class="resumo-cartao"><strong>${calcTempoOrcamento[calcState.orcamento]}</strong><span>tempo estimado para resultados</span></div>
+    </div>
+
+    <h3 style="margin:1.8rem 0 .4rem;">Suas prioridades, em ordem</h3>
+    <div class="resultado-prioridades">
+      ${dados.prioridades.map((p,i) => `
+        <div class="prioridade-item">
+          <div class="prioridade-numero">${i+1}</div>
+          <div class="prioridade-texto"><strong>${p.t}</strong><span>${p.d}</span></div>
+        </div>`).join('')}
+    </div>
+
+    ${calcState.transtorno === 'bipolar' ? `
+      <div class="aviso vermelho" style="margin-top:1.8rem;">
+        <h3>🚨 Atenção obrigatória</h3>
+        <ul><li>Qualquer mudança relacionada à exposição de luz deve ser acompanhada por psiquiatra. Este plano não substitui essa supervisão.</li></ul>
+      </div>` : ''}
+
+    <div style="display:flex;gap:1rem;margin-top:2rem;flex-wrap:wrap;justify-content:center;">
+      <a href="#" class="hero-botao" onclick="return mostrarPagina('${calcState.transtorno}')">Ver guia completo de ${dados.nome} →</a>
+      <a href="#" class="hero-botao" style="background:var(--white);color:var(--ink);border:1px solid var(--line);" onclick="return mostrarPagina('tarefas')">Ver lista de tarefas geral →</a>
+    </div>
+
+    <div class="calc-futuro-nota">💡 Em breve, esta calculadora poderá ser potencializada por inteligência artificial para gerar planos ainda mais detalhados e conversacionais.</div>
+
+    <div style="text-align:center;margin-top:1.2rem;"><span class="calc-reiniciar" onclick="calcReiniciar()">↺ Refazer a calculadora</span></div>
+  `;
+  document.getElementById('resultado-container').innerHTML = html;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function calcReiniciar() {
+  calcState = { transtorno: null, ambienteAtual: [], orcamento: null, espaco: null };
+  document.querySelectorAll('.calc-opcao').forEach(o => o.classList.remove('selecionada'));
+  document.querySelectorAll('.calc-progress-dot').forEach((d,i) => { if(i>0) d.classList.remove('completo'); });
+  document.querySelectorAll('.calc-step').forEach(s => s.classList.remove('ativo'));
+  document.getElementById('step-1').classList.add('ativo');
+  calcAtualizarBotoes();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ═══════ INICIALIZAÇÃO ═══════ */
+renderizarPerguntas();
+renderizarLista();
+renderizarListasTranstorno();
+renderizarFontes();
+</script>
+</body>
+</html>
